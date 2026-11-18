@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENDAL ZONE</title>
+    <!-- مكتبة EmailJS للإرسال التلقائي للأكواد عبر الجيميل -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // استبدل المفتاح الأخير بالـ Public Key الخاص بك من EmailJS
+            emailjs.init("YOUR_PUBLIC_KEY");
+        })();
+    </script>
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --card-bg: #111827;
+            --gold: #d4af37;
+            --gold-light: #f39c12;
+            --blue: #1e3a8a;
+            --blue-light: #3b82f6;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 2px solid var(--gold);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        h2, h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold), #b8860b);
+            color: #000;
+            font-weight: bold;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, var(--blue-light), var(--blue));
+            color: #fff;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--gold);
+            outline: none;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        .nav-tab.active, .nav-tab:hover {
+            background: var(--blue);
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .badge {
+            background: var(--gold);
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">⚡ SENDAL ZONE</div>
+        <div id="user-info-header" class="hidden">
+            <span id="header-username" style="color: var(--gold); margin-left: 15px;"></span>
+            <button onclick="logout()" class="btn" style="width: auto; padding: 5px 15px; margin: 0; font-size: 14px; background: var(--danger); color: #fff;">تسجيل خروج</button>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- قسم المصادقة (تسجيل الدخول / إنشاء حساب / نسيت كلمة المرور) -->
+        <section id="auth-section" class="card" style="max-width: 450px; margin: 40px auto;">
+            <div id="login-form-box">
+                <h2>تسجيل الدخول</h2>
+                <input type="email" id="login-email" placeholder="البريد الإلكتروني (Gmail)">
+                <input type="password" id="login-pass" placeholder="كلمة المرور">
+                <button class="btn" onclick="login()">دخول</button>
+                <p style="margin-top: 15px; text-align: center;">
+                    <a href="#" onclick="switchAuth('register')" style="color: var(--gold); text-decoration: none;">انشاء حساب جديد</a> | 
+                    <a href="#" onclick="switchAuth('forgot')" style="color: var(--blue-light); text-decoration: none;">نسيت كلمة السر؟</a>
+                </p>
+            </div>
+
+            <div id="register-form-box" class="hidden">
+                <h2>انشاء حساب جديد</h2>
+                <input type="text" id="reg-name" placeholder="اسم المستخدم">
+                <input type="email" id="reg-email" placeholder="البريد الإلكتروني (Gmail)">
+                <input type="password" id="reg-pass" placeholder="كلمة المرور">
+                <select id="reg-role">
+                    <option value="client">عميل</option>
+                    <option value="merchant">تاجر</option>
+                </select>
+                <button class="btn" onclick="sendOtpForRegister()">إرسال كود التحقق للجيميل</button>
+                
+                <div id="otp-verify-box" class="hidden" style="margin-top: 15px;">
+                    <input type="text" id="reg-otp-input" placeholder="ادخل كود التحقق المرسل لجيميلك">
+                    <button class="btn btn-blue" onclick="verifyAndRegister()">تأكيد الحساب وإنشائه</button>
+                </div>
+                <p style="margin-top: 15px; text-align: center;">
+                    <a href="#" onclick="switchAuth('login')" style="color: var(--gold); text-decoration: none;">لديك حساب بالفعل؟ سجل دخول</a>
+                </p>
+            </div>
+
+            <div id="forgot-form-box" class="hidden">
+                <h2>استعادة كلمة المرور</h2>
+                <input type="email" id="forgot-email" placeholder="ادخل بريدك الإلكتروني (Gmail)">
+                <button class="btn" onclick="sendOtpForForgot()">إرسال كود الاستعادة</button>
+                
+                <div id="reset-pass-box" class="hidden" style="margin-top: 15px;">
+                    <input type="text" id="forgot-otp-input" placeholder="كود التحقق">
+                    <input type="password" id="new-pass-input" placeholder="كلمة المرور الجديدة">
+                    <button class="btn btn-blue" onclick="resetPassword()">تغيير كلمة المرور</button>
+                </div>
+                <p style="margin-top: 15px; text-align: center;">
+                    <a href="#" onclick="switchAuth('login')" style="color: var(--gold); text-decoration: none;">العودة لتسجيل الدخول</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- لوحة التحكم الرئيسية بعد تسجيل الدخول -->
+        <section id="dashboard-section" class="hidden">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('topup')">Top - Up (شحن)</button>
+                <button class="nav-tab" onclick="switchTab('accounts')">Accounts (الحسابات)</button>
+                <button class="nav-tab" onclick="switchTab('profile')">Profile (الملف والمحفظة)</button>
+                <button id="tab-merchant-btn" class="nav-tab hidden" onclick="switchTab('merchant')">إدارة الطلبات (التاجر)</button>
+                <button id="tab-admin-btn" class="nav-tab hidden" onclick="switchTab('admin')">لوحة تحكم الأدمن</button>
+            </div>
+
+            <!-- تبويب الشحن Top-Up -->
+            <div id="tab-topup" class="card">
+                <h2>شحن الألعاب والخدمات</h2>
+                <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                    <div style="border: 2px solid var(--gold); border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; width: 150px;">
+                        <h4 style="color: var(--gold);">Free Fire</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);">شحن فوري</p>
+                    </div>
+                </div>
+                <h3>اختر طريقة الشحن:</h3>
+                <select id="topup-method">
+                    <option value="id">شحن عن طريق الـ ID</option>
+                    <option value="account">شحن عن طريق الحساب</option>
+                </select>
+                <input type="text" id="topup-target" placeholder="اكتب الـ ID أو بيانات الحساب هنا">
+                <select id="topup-package">
+                    <option value="100">100 جواهر - 50 جنيه</option>
+                    <option value="310">310 جواهر - 150 جنيه</option>
+                    <option value="520">520 جواهر - 250 جنيه</option>
+                </select>
+                <h3 style="margin-top: 15px;">اختر وسيلة الدفع:</h3>
+                <div id="payment-methods-list">
+                    <!-- يتم تعبئتها بواسطة الإدارة -->
+                </div>
+                <input type="text" id="topup-receipt" placeholder="رابط صورة التحويل أو رقم العملية">
+                <button class="btn" onclick="submitTopupOrder()">إرسال طلب الشحن للأدمن</button>
+            </div>
+
+            <!-- تبويب الحسابات Accounts -->
+            <div id="tab-accounts" class="card hidden">
+                <h2>سوق الحسابات</h2>
+                <button class="btn btn-blue" style="width: auto; margin-bottom: 15px;" onclick="openAddAccountModal()">رفع حساب للبيع</button>
+                <div id="accounts-marketplace">
+                    <!-- عرض الحسابات المتاحة -->
+                </div>
+            </div>
+
+            <!-- تبويب البروفايل Profile -->
+            <div id="tab-profile" class="card hidden">
+                <h2>الملف الشخصي والمحفظة</h2>
+                <div style="display: flex; justify-content: space-between; background: #1f2937; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <div>
+                        <p>الاسم: <span id="prof-name" style="color: var(--gold);"></span></p>
+                        <p>الرتبة: <span id="prof-role" style="color: var(--blue-light);"></span></p>
+                    </div>
+                    <div>
+                        <p>رصيد المحفظة: <span id="prof-wallet" style="color: var(--success); font-weight: bold;">0</span> جنيه</p>
+                        <p>الكاش باك: <span id="prof-cashback" style="color: var(--gold); font-weight: bold;">0</span></p>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h3>إضافة رصيد للمحفظة</h3>
+                    <input type="number" id="deposit-amount" placeholder="المبلغ المراد إضافته">
+                    <input type="text" id="deposit-receipt" placeholder="رقم أو صورة عملية التحويل للإدارة">
+                    <button class="btn" onclick="requestDeposit()">طلب إيداع رصيد</button>
+                </div>
+
+                <h3>سجل المعاملات (Transaction History)</h3>
+                <div id="transaction-history-list" style="background: #161b22; padding: 10px; border-radius: 8px; max-height: 200px; overflow-y: auto;">
+                    <!-- المعاملات -->
+                </div>
+            </div>
+
+            <!-- تبويب التاجر Merchant -->
+            <div id="tab-merchant" class="card hidden">
+                <h2>لوحة تحكم التاجر</h2>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-weight: bold;">حالة التاجر:</label>
+                    <button id="merchant-status-btn" class="btn btn-blue" onclick="toggleMerchantStatus()">أونلاين (Online)</button>
+                </div>
+                <h3>الطلبات الواردة</h3>
+                <div id="merchant-orders-list">
+                    <!-- الطلبات -->
+                </div>
+            </div>
+
+            <!-- تبويب الأدمن Admin -->
+            <div id="tab-admin" class="card hidden">
+                <h2>لوحة تحكم الأدمن الأساسي (ENG MOAAZ)</h2>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3>إدارة وسائل الدفع</h3>
+                    <div id="admin-payment-management"></div>
+                    <input type="text" id="new-pay-name" placeholder="اسم وسيلة الدفع (مثال: فودافون كاش)">
+                    <button class="btn" onclick="addPaymentMethod()">إضافة وسيلة دفع جديدة</button>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <h3>الطلبات المعلقة والإيداعات</h3>
+                    <div id="admin-pending-orders"></div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <h3>موافقة على الحسابات المعروضة للبيع</h3>
+                    <div id="admin-pending-accounts"></div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script>
+        // الذاكرة المؤقتة والتخزين المحلي
+        let users = JSON.parse(localStorage.getItem('sendal_users')) || [
+            { name: "Admin Moaaz", email: "admin@sendal.com", pass: "123456", role: "admin", wallet: 1000, cashback: 50, history: [] }
+        ];
+        let paymentMethods = JSON.parse(localStorage.getItem('sendal_payments')) || [
+            { id: 1, name: "فودافون كاش - 01012345678", active: true },
+            { id: 2, name: "إتصالات كاش - 01112345678", active: true }
+        ];
+        let orders = JSON.parse(localStorage.getItem('sendal_orders')) || [];
+        let accountsMarket = JSON.parse(localStorage.getItem('sendal_accounts')) || [];
+        
+        let currentUser = JSON.parse(localStorage.getItem('sendal_current_user')) || null;
+        let generatedOtp = null;
+
+        // تهيئة النظام عند التحميل
+        window.onload = function() {
+            if (currentUser) {
+                showDashboard();
+            }
+        };
+
+        function switchAuth(type) {
+            document.getElementById('login-form-box').classList.add('hidden');
+            document.getElementById('register-form-box').classList.add('hidden');
+            document.getElementById('forgot-form-box').classList.add('hidden');
+            
+            if (type === 'login') document.getElementById('login-form-box').classList.remove('hidden');
+            if (type === 'register') document.getElementById('register-form-box').classList.remove('hidden');
+            if (type === 'forgot') document.getElementById('forgot-form-box').classList.remove('hidden');
+        }
+
+        // إرسال كود التحقق للتسجيل عبر EmailJS
+        function sendOtpForRegister() {
+            const email = document.getElementById('reg-email').value;
+            const name = document.getElementById('reg-name').value;
+            if(!email || !name) {
+                alert('برجاء إدخال الاسم والبريد الإلكتروني أولاً');
+                return;
+            }
+            
+            generatedOtp = Math.floor(100000 + Math.random() * 900000);
+            
+            const templateParams = {
+                to_email: email,
+                otp_code: generatedOtp
+            };
+
+            emailjs.send('service_dx1ati9', 'template_ve1zh0e', templateParams)
+                .then(function(response) {
+                    alert('تم إرسال كود التحقق بنجاح إلى جيميلك!');
+                    document.getElementById('otp-verify-box').classList.remove('hidden');
+                }, function(error) {
+                    alert('فشل إرسال البريد، تأكد من صحة الإيميل أو مفاتيح EmailJS.');
+                });
+        }
+
+        function verifyAndRegister() {
+            const userOtp = document.getElementById('reg-otp-input').value;
+            if (userOtp != generatedOtp) {
+                alert('كود التحقق غير صحيح!');
+                return;
+            }
+
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            const role = document.getElementById('reg-role').value;
+
+            users.push({ name, email, pass, role, wallet: 0, cashback: 0, history: [], online: true });
+            localStorage.setItem('sendal_users', JSON.stringify(users));
+            alert('تم إنشاء الحساب بنجاح! سجل دخولك الآن.');
+            switchAuth('login');
+        }
+
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+
+            const user = users.find(u => u.email === email && u.pass === pass);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('sendal_current_user', JSON.stringify(currentUser));
+                showDashboard();
+            } else {
+                alert('البريد الإلكتروني أو كلمة المرور غير صحيحة!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('sendal_current_user');
+            document.getElementById('auth-section').classList.remove('hidden');
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('user-info-header').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+            document.getElementById('user-info-header').classList.remove('hidden');
+            document.getElementById('header-username').innerText = currentUser.name;
+
+            document.getElementById('prof-name').innerText = currentUser.name;
+            document.getElementById('prof-role').innerText = currentUser.role === 'admin' ? 'أدمن أساسي' : (currentUser.role === 'merchant' ? 'تاجر' : 'عميل');
+            document.getElementById('prof-wallet').innerText = currentUser.wallet;
+            document.getElementById('prof-cashback').innerText = currentUser.cashback;
+
+            if (currentUser.role === 'merchant' || currentUser.role === 'admin') {
+                document.getElementById('tab-merchant-btn').classList.remove('hidden');
+            }
+            if (currentUser.role === 'admin') {
+                document.getElementById('tab-admin-btn').classList.remove('hidden');
+            }
+
+            renderPaymentMethods();
+            renderAdminPanel();
+            renderMerchantOrders();
+        }
+
+        function switchTab(tabName) {
+            document.getElementById('tab-topup').classList.add('hidden');
+            document.getElementById('tab-accounts').classList.add('hidden');
+            document.getElementById('tab-profile').classList.add('hidden');
+            document.getElementById('tab-merchant').classList.add('hidden');
+            document.getElementById('tab-admin').classList.add('hidden');
+
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            if (tabName === 'topup') {
+                document.getElementById('tab-topup').classList.remove('hidden');
+                event.target.classList.add('active');
+            } else if (tabName === 'accounts') {
+                document.getElementById('tab-accounts').classList.remove('hidden');
+                event.target.classList.add('active');
+            } else if (tabName === 'profile') {
+                document.getElementById('tab-profile').classList.remove('hidden');
+                event.target.classList.add('active');
+            } else if (tabName === 'merchant') {
+                document.getElementById('tab-merchant').classList.remove('hidden');
+                event.target.classList.add('active');
+            } else if (tabName === 'admin') {
+                document.getElementById('tab-admin').classList.remove('hidden');
+                event.target.classList.add('active');
+            }
+        }
+
+        function renderPaymentMethods() {
+            const container = document.getElementById('payment-methods-list');
+            container.innerHTML = '';
+            paymentMethods.filter(p => p.active).forEach(p => {
+                container.innerHTML += `<label style="display: block; margin: 5px 0;"><input type="radio" name="pay_method" value="${p.name}"> ${p.name}</label>`;
+            });
+        }
+
+        function submitTopupOrder() {
+            const method = document.getElementById('topup-method').value;
+            const target = document.getElementById('topup-target').value;
+            const pkg = document.getElementById('topup-package').value;
+            const receipt = document.getElementById('topup-receipt').value;
+
+            if(!target || !receipt) {
+                alert('برجاء إدخال بيانات الشحنة وإيصال التحويل');
+                return;
+            }
+
+            const newOrder = {
+                id: Date.now(),
+                client: currentUser.email,
+                type: 'Top-Up Free Fire',
+                details: `طريقة: ${method} | الهدف: ${target} | الباقة: ${pkg}`,
+                receipt: receipt,
+                status: 'pending_admin' // معلق عند الأدمن
+            };
+
+            orders.push(newOrder);
+            localStorage.setItem('sendal_orders', JSON.stringify(orders));
+            alert('تم إرسال الطلب للأدمن بنجاح وفي انتظار المراجعة!');
+        }
+
+        function requestDeposit() {
+            const amount = document.getElementById('deposit-amount').value;
+            const receipt = document.getElementById('deposit-receipt').value;
+            if(!amount || !receipt) return alert('أدخل المبلغ والإيصال');
+
+            orders.push({
+                id: Date.now(),
+                client: currentUser.email,
+                type: 'Deposit Wallet',
+                details: `إيداع مبلغ: ${amount} جنيه`,
+                receipt: receipt,
+                status: 'pending_deposit',
+                amount: parseFloat(amount)
+            });
+            localStorage.setItem('sendal_orders', JSON.stringify(orders));
+            alert('تم إرسال طلب الإيداع للأدمن!');
+        }
+
+        let isMerchantOnline = true;
+        function toggleMerchantStatus() {
+            isMerchantOnline = !isMerchantOnline;
+            const btn = document.getElementById('merchant-status-btn');
+            btn.innerText = isMerchantOnline ? "أونلاين (Online)" : "أوفلاين (Offline)";
+            btn.style.background = isMerchantOnline ? "var(--success)" : "var(--danger)";
+        }
+
+        function renderMerchantOrders() {
+            const container = document.getElementById('merchant-orders-list');
+            container.innerHTML = '';
+            const merchantOrders = orders.filter(o => o.status === 'assigned_to_merchant');
+            
+            if(merchantOrders.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">لا توجد طلبات جديدة حالياً.</p>';
+                return;
+            }
+
+            merchantOrders.forEach(o => {
+                container.innerHTML += `
+                    <div style="background: #1f2937; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <p><b>الطلب:</b> ${o.type} - ${o.details}</p>
+                        <p><b>العميل:</b> ${o.client}</p>
+                        <button class="btn btn-blue" onclick="completeOrder(${o.id})">إتمام الشحن (Complete)</button>
+                        <button class="btn" style="background: var(--danger); color: #fff;" onclick="cancelOrder(${o.id})">رفض وإلغاء</button>
+                    </div>
+                `;
+            });
+        }
+
+        function completeOrder(orderId) {
+            const ord = orders.find(o => o.id === orderId);
+            if(ord) {
+                ord.status = 'completed';
+                localStorage.setItem('sendal_orders', JSON.stringify(orders));
+                alert('تم إتمام الطلب بنجاح!');
+                renderMerchantOrders();
+            }
+        }
+
+        function cancelOrder(orderId) {
+            const ord = orders.find(o => o.id === orderId);
+            if(ord) {
+                ord.status = 'cancelled';
+                // إرجاع الفلوس لمحفظة العميل لو مدفوع
+                const clientUser = users.find(u => u.email === ord.client);
+                if(clientUser && ord.amount) {
+                    clientUser.wallet += ord.amount;
+                }
+                localStorage.setItem('sendal_orders', JSON.stringify(orders));
+                localStorage.setItem('sendal_users', JSON.stringify(users));
+                alert('تم إلغاء الطلب ورد المبلغ لمحفظة العميل.');
+                renderMerchantOrders();
+            }
+        }
+
+        function renderAdminPanel() {
+            if(currentUser.role !== 'admin') return;
+            
+            // إدارة وسائل الدفع
+            const payContainer = document.getElementById('admin-payment-management');
+            payContainer.innerHTML = '';
+            paymentMethods.forEach(p => {
+                payContainer.innerHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #1f2937; padding: 10px; margin-bottom: 5px; border-radius: 5px;">
+                        <span>${p.name} - ${p.active ? '<span style="color:var(--success)">نشط</span>' : '<span style="color:var(--danger)">خارج الصيانة</span>'}</span>
+                        <button class="btn" style="width: auto; padding: 5px 10px;" onclick="togglePayment(${p.id})">تغيير الحالة</button>
+                    </div>
+                `;
+            });
+
+            // الطلبات المعلقة للإدارة
+            const pendingContainer = document.getElementById('admin-pending-orders');
+            pendingContainer.innerHTML = '';
+            orders.filter(o => o.status.startsWith('pending_')).forEach(o => {
+                pendingContainer.innerHTML += `
+                    <div style="background: #1f2937; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                        <p><b>نوع:</b> ${o.type} | <b>التفاصيل:</b> ${o.details} | <b>الإيصال:</b> ${o.receipt}</p>
+                        <button class="btn btn-blue" style="width: auto; padding: 5px 10px;" onclick="adminApproveOrder(${o.id})">تأكيد الدفع وتحويل للتاجر</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addPaymentMethod() {
+            const name = document.getElementById('new-pay-name').value;
+            if(!name) return;
+            paymentMethods.push({ id: Date.now(), name, active: true });
+            localStorage.setItem('sendal_payments', JSON.stringify(paymentMethods));
+            document.getElementById('new-pay-name').value = '';
+            renderPaymentMethods();
+            renderAdminPanel();
+        }
+
+        function togglePayment(id) {
+            const p = paymentMethods.find(x => x.id === id);
+            if(p) {
+                p.active = !p.active;
+                localStorage.setItem('sendal_payments', JSON.stringify(paymentMethods));
+                renderPaymentMethods();
+                renderAdminPanel();
+            }
+        }
+
+        function adminApproveOrder(orderId) {
+            const ord = orders.find(o => o.id === orderId);
+            if(ord) {
+                if(ord.status === 'pending_deposit') {
+                    const clientUser = users.find(u => u.email === ord.client);
+                    if(clientUser) clientUser.wallet += ord.amount;
+                    ord.status = 'completed';
+                } else {
+                    ord.status = 'assigned_to_merchant'; // يروح للتاجر فوراً
+                }
+                localStorage.setItem('sendal_orders', JSON.stringify(orders));
+                localStorage.setItem('sendal_users', JSON.stringify(users));
+                alert('تم الاعتماد وتحويل الطلب بنجاح!');
+                renderAdminPanel();
+                renderMerchantOrders();
+            }
+        }
+    </script>
+</body>
+</html>
